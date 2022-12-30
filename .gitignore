@@ -2,6 +2,9 @@ python/src/auth/venv/
 kubectl
 minikube-linux-amd64
 
+
+.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
