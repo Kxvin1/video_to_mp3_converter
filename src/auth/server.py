@@ -45,6 +45,7 @@ def login():
 
 # creates JWT token
 def createJWT(username, secret, authz):
+    # these are our 'claims'
     return jwt.encode(
         {
             "username": username,
