@@ -35,11 +35,16 @@ def upload(f, fs, channel, access):
             routing_key="video",
             # json.dumps converts the obj to a json formatted str
             body=json.dumps(message),
+            # very important to make sure our messages are persisted in our code
+            # in the event of a pod crash or a restart of our pod
             properties=pika.BasicProperties(
                 delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
             ),
         )
     except Exception as err:
         print(err)
+        # if there's no message on the queue (message unsuccessfully added to the queue),
+        # but file exists in the db it won't ever get processed,
+        # so we need to delete it here if we get an exception/error
         fs.delete(fid)
         return "internal server error", 500
