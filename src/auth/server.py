@@ -19,9 +19,9 @@ server.config["MYSQL_PORT"] = os.environ.get("MYSQL_PORT")
 # login route
 @server.route("/login", methods=["POST"])
 def login():
-    auth = request.authorization  # the request object that we're importing
-    if not auth:  # if the header doesn't exist in the request
-        return "missing credentials", 401  # return warning and 401 status code
+    auth = request.authorization
+    if not auth:
+        return "missing credentials", 401
 
     # check db for username and password
     cur = mysql.connection.cursor()
@@ -29,7 +29,7 @@ def login():
         "SELECT email, password FROM user WHERE email=%s", (auth.username,)
     )
 
-    if res > 0:  # res is an array of rows, so if we have at least 1, then go into if block
+    if res > 0:
         user_row = cur.fetchone()
         email = user_row[0]
         password = user_row[1]
@@ -37,10 +37,9 @@ def login():
         if auth.username != email or auth.password != password:
             return "invalid credentials", 401
         else:
-            # create helper function(username, secret_token, admin_privs)
             return createJWT(auth.username, os.environ.get("JWT_SECRET"), True)
-    else:  # user doesn't exist in database, so no access
-        return "invalid credentials", 401
+    else:
+        return "invalide credentials", 401
 
 
 # creates JWT token
